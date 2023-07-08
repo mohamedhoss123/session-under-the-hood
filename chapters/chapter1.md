@@ -62,7 +62,8 @@ function getcookie(req, name, secrets) {
 
 الكود السابق يقوم باستخراج `cookie` الموجودة داخل  `header`  على هيئة `object` و يتم اختصاص `cookie` الخاصة ب `session` عن طريق الكود `raw = cookies[name]` ولمن لا يعلم فالقيمة الافتراضية للمتغير `nama` هيه `connect.sid` و بم انك استخدمت المكتبة من قبل فبالطبع لاحظت ان `cookie` الخاصة ب `session` تحفظ تلقائيا باسم `connect.sid` .<br>
 تعريف القيمة الافتراضية ك `connect.sid` موجود في الرابط
-[التالي](https://github.com/expressjs/session/blob/master/index.js#L97)
+[التالي](https://github.com/expressjs/session/blob/master/index.js#L97) .
 
- أما الدالة الثانية فيهة `serialize` و المسؤولة عن تحويل اسم `cookie` و القيمة الخاصة بها إلى الشكل الذي يوضع به في الـ `header` على هيئة نص `(string)` و الدالة تقبل العديد من الخيارات يمكن تعلم المزيد عنها من [هنا](https://github.com/jshttp/cookie#cookieserializename-value-options) .
+ أما الدالة الثانية فيهة `serialize` و المسؤولة عن تحويل اسم `cookie` و القيمة الخاصة بها إلى الشكل الذي يوضع به في الـ `Set-Cookie` على هيئة نص `(string)` و الدالة تقبل العديد من الخيارات يمكن  تعلم المزيد عن الدالة `serialize` من [هنا](https://github.com/jshttp/cookie#cookieserializename-value-options) .
+
 
