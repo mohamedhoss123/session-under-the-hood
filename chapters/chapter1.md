@@ -5,7 +5,9 @@
 ()app.use
 `
  وبما انك تعلم ان `app.use` يتم وضع فيها `middleware` فيجب ان نضع المكتبة بهذا الشكل `app.use(session)` ولكن الغريب في الأمر أنك ترى انها لا تستخدم ك callback وانما تستخدم كدالة عادية بهذ الشكل `app.use(session())` كيف هذا ؟<br>
- الإجابة بسيطة ومنطقية جدا تقوم الدالة session عند استدعائها ووضع الاعدادات التي تريدها بارجاع دالة اخرى و هذه الدالة هية middleware و تقبل ( req , res , next ) كاي دالة middleware تعرفها وستري الموضوع بشكل أوضح في الكود التالي : 
+ الإجابة بسيطة ومنطقية جدا تقوم الدالة session عند استدعائها ووضع الاعدادات التي تريدها بارجاع دالة اخرى و هذه الدالة هية middleware و تقبل ( req , res , next ) كاي دالة middleware تعرفها وستري الموضوع بشكل أوضح في الكود 
+[التالي](https://github.com/expressjs/session/blob/master/index.js#L179)
+ : 
 
 ```js
 function session(options) {
@@ -16,3 +18,50 @@ function session(options) {
     }
 }
 ```
+هذه كانت احد النقاط التي كانت تحيرني حين استخدم اي مكتبة تتبع نفس النهج .
+
+بعد ان تقوم بوضع الإعدادات الخاصة بك حين استدعاء `express-session` قد تترك بعض الاعدادات بدون ان تختارها علي سبيل المثال انك لم تقم بوضع `store` فتقوم المكتبة بوضع القيمة الافتراضية لها ك `MemoryStore` كما في الكود 
+[التالي](https://github.com/expressjs/session/blob/master/index.js#L100)
+
+```js
+function session(options) {
+
+  // get the session store
+  var store = opts.store || new MemoryStore()
+}
+```
+
+## شرح الاعتماديات dependencies
+
+قبل التعمق أكثر في المكتبة يجد أن نعلم ماهية الاعتماديات `dependencies` المستخدمة من طرفها .
+
+### مكتبة `cookie` 
+
+و هية مكتبة مكونة من دالتين . <br>
+الاولى هية `parse` و تستخدم لتقوم بعمل تحليل `(parse)` لل cookie و تاستخراجها علي هيئة `object` مثال : 
+
+
+```js
+var cookies = cookie.parse('foo=bar; equation=E%3Dmc%5E2');
+// { foo: 'bar', equation: 'E=mc^2' }
+```
+وتستخدم مكتبة express-session الدالة `parse` لتقوم باستخراج `session id` من ال `cookie` عن طريق الكود [التالي](https://github.com/expressjs/session/blob/master/index.js#L529)
+: 
+```js
+function getcookie(req, name, secrets) {
+  var header = req.headers.cookie;
+  var raw;
+  // some code
+  // read from cookie header
+  if (header) {
+    var cookies = cookie.parse(header);
+    raw = cookies[name];
+    // some code
+  }
+  ```
+
+الكود السابق يقوم باستخراج `cookie` الموجودة داخل  `header`  على هيئة `object` و يتم اختصاص `cookie` الخاصة ب `session` عن طريق الكود `raw = cookies[name]` ولمن لا يعلم فالقيمة الافتراضية له هيه `connect.sid` و بم انك استخدمت المكتبة من قبل فبالطبع لاحظت ان `cookie` الخاصة ب `session` تحفظ تلقائيا باسم `connect.sid` .
+
+تعريف القيمة الافتراضيى ك `connect.sid` موجود في الرابط
+[التالي](https://github.com/expressjs/session/blob/master/index.js#L97)
+
