@@ -67,3 +67,16 @@ function getcookie(req, name, secrets) {
  أما الدالة الثانية فيهة `serialize` و المسؤولة عن تحويل اسم `cookie` و القيمة الخاصة بها إلى الشكل الذي يوضع به في الـ `Set-Cookie` على هيئة نص `(string)` و الدالة تقبل العديد من الخيارات يمكن  تعلم المزيد عن الدالة `serialize` من [هنا](https://github.com/jshttp/cookie#cookieserializename-value-options) .
 
 
+### ثانيا مكتبة `cookie-signature` 
+
+ملحوظة هامة هذا الجزء يحتاج معرفة بسيطة بال `cryptography` و خوارزميات التشفير مثل `sha256`
+
+وهية مكتبة وظيفتها حفظ ال `cookie` و التاكد في أنه لم يتم التلاعب بها و تشبة في كيفية عملها `jwt` إذا كنت قد استخدمتها من قبل . تستخدم المكتبة للتشفير `HMAC-SHA256` لمزيد من التفاصيل فيوجد شرح على 
+[يوتيوب](https://www.youtube.com/watch?v=MKn3cxFNN1I)
+ يغطي هذا 
+
+
+لمزيد  من المعلومات حول كيف تعمل يمكنك النظر 
+[هنا ](https://github.com/tj/node-cookie-signature)
+
+
